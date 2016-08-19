@@ -20,193 +20,100 @@ public class CommandManager implements CommandExecutor {
     // A list of all master commands
     private static List<MasterCommand> masterCommandList = new ArrayList<>();
 
-    @Override
-    public boolean onCommand(CommandSender sender, Command command, String s, String[] args) {
-
-        if (args.length == 0) {
-            sender.sendMessage("§a§l[MelonPermissions]§a version " + MelonPerms.getInstance().getDescription().getVersion());
-            for (MasterCommand c : getMasterCommandList()) {
-                boolean hasPermission = false;
-                for (SubCommand sc : c.getCommands()) {
-                    if (sc.getPermission() == null || sender.hasPermission(sc.getPermission())) {
-                        hasPermission = true;
-                        break;
-                    }
-                }
-                if (!hasPermission) continue;
-                sender.sendMessage("§b§l-> §b/perms " + c.getName());
-            }
-        } else {
-
-            // Match the first argument to a MasterCommand
-            String cmd = args[0];
-            MasterCommand c = null;
-            for (MasterCommand mc : getMasterCommandList()) {
-                if (mc.getName().equalsIgnoreCase(cmd)) {
-                    c = mc;
-                    break;
-                }
-            }
-
-            // Check if command exists
-            if (c != null) {
-
-                List<SubCommand> cmds = c.getCommands();
-
-                boolean hasAnyPermission = false;
-                for (SubCommand sc : cmds) {
-                    if (sc.getPermission() == null || sender.hasPermission(sc.getPermission())) {
-                        hasAnyPermission = true;
-                        break;
-                    }
-                }
-
-                if (!hasAnyPermission) {
-                    sender.sendMessage("§c§l[MP] §cYou don't have permission for that.");
-                    return true;
-                }
-
-                // If nothing else is specified, output the list of subcommands for the master command
-                if (args.length == 1) {
-                    if (cmds.size() > 0) {
-                        sender.sendMessage("§a§l[MP]§a " + c.getName().toUpperCase() + " Commands");
-                        for (SubCommand sc : cmds) {
-                            sender.sendMessage("§b§l-> §b/perms " + c.getName() + " " + sc.getName() + " " + (sc.getUsage() != null ? sc.getUsage() : ""));
-                        }
-                    } else {
-                        sender.sendMessage("§c§l[MP]§c No registered commands for provided scope.");
-                    }
-                } else {
-
-                    // Match the second argument to a subcommand
-                    SubCommand sc = null;
-                    for (SubCommand ssc : cmds) {
-                        if (ssc.getName().equalsIgnoreCase(args[1])) {
-                            sc = ssc;
-                            break;
-                        }
-                    }
-
-                    // Check if the command exists
-                    if (sc != null) {
-
-                        // Pass on any remaining arguments and execute the subcommand
-                        List<String> a = new ArrayList<>();
-                        a.addAll(Arrays.asList(args).subList(2, args.length));
-
-                        sc.run(sender, a);
-
-                    } else {
-                        sender.sendMessage("§c§l[MP] §cUnrecognized command. Try \"/perms " + c.getName() + "\"?");
-                    }
-
-                }
-
-
-            } else {
-                sender.sendMessage("§c§l[MP]§c Unrecognized scope. Try \"/perms\"?");
-            }
-
-        }
-
-
-        return true;
-    }
-
-    @Override
-    public boolean onCommand(CommandSender sender, Command command, String s, String[] args) {
-
-        if (args.length == 0) {
-            sender.sendMessage("§a§l[MelonPermissions]§a version " + MelonPerms.getInstance().getDescription().getVersion());
-            for (MasterCommand c : getMasterCommandList()) {
-                boolean hasPermission = false;
-                for (SubCommand sc : c.getCommands()) {
-                    if (sc.getPermission() == null || sender.hasPermission(sc.getPermission())) {
-                        hasPermission = true;
-                        break;
-                    }
-                }
-                if (!hasPermission) continue;
-                sender.sendMessage("§b§l-> §b/perms " + c.getName());
-            }
-        } else {
-
-            // Match the first argument to a MasterCommand
-            String cmd = args[0];
-            MasterCommand c = null;
-            for (MasterCommand mc : getMasterCommandList()) {
-                if (mc.getName().equalsIgnoreCase(cmd)) {
-                    c = mc;
-                    break;
-                }
-            }
-
-            // Check if command exists
-            if (c != null) {
-
-                List<SubCommand> cmds = c.getCommands();
-
-                boolean hasAnyPermission = false;
-                for (SubCommand sc : cmds) {
-                    if (sc.getPermission() == null || sender.hasPermission(sc.getPermission())) {
-                        hasAnyPermission = true;
-                        break;
-                    }
-                }
-
-                if (!hasAnyPermission) {
-                    sender.sendMessage("§c§l[MP] §cYou don't have permission for that.");
-                    return true;
-                }
-
-                // If nothing else is specified, output the list of subcommands for the master command
-                if (args.length == 1) {
-                    if (cmds.size() > 0) {
-                        sender.sendMessage("§a§l[MP]§a " + c.getName().toUpperCase() + " Commands");
-                        for (SubCommand sc : cmds) {
-                            sender.sendMessage("§b§l-> §b/perms " + c.getName() + " " + sc.getName() + " " + (sc.getUsage() != null ? sc.getUsage() : ""));
-                        }
-                    } else {
-                        sender.sendMessage("§c§l[MP]§c No registered commands for provided scope.");
-                    }
-                } else {
-
-                    // Match the second argument to a subcommand
-                    SubCommand sc = null;
-                    for (SubCommand ssc : cmds) {
-                        if (ssc.getName().equalsIgnoreCase(args[1])) {
-                            sc = ssc;
-                            break;
-                        }
-                    }
-
-                    // Check if the command exists
-                    if (sc != null) {
-
-                        // Pass on any remaining arguments and execute the subcommand
-                        List<String> a = new ArrayList<>();
-                        a.addAll(Arrays.asList(args).subList(2, args.length));
-
-                        sc.run(sender, a);
-
-                    } else {
-                        sender.sendMessage("§c§l[MP] §cUnrecognized command. Try \"/perms " + c.getName() + "\"?");
-                    }
-
-                }
-
-
-            } else {
-                sender.sendMessage("§c§l[MP]§c Unrecognized scope. Try \"/perms\"?");
-            }
-
-        }
-
-
-        return true;
-    }
-
     public static List<MasterCommand> getMasterCommandList() {
         return masterCommandList;
+    }
+
+    @Override
+    public boolean onCommand(CommandSender sender, Command command, String s, String[] args) {
+
+        if (args.length == 0) {
+            sender.sendMessage("§a§l[MelonPermissions]§a version " + MelonPerms.getInstance().getDescription().getVersion());
+            for (MasterCommand c : getMasterCommandList()) {
+                boolean hasPermission = false;
+                for (SubCommand sc : c.getCommands()) {
+                    if (sc.getPermission() == null || sender.hasPermission(sc.getPermission())) {
+                        hasPermission = true;
+                        break;
+                    }
+                }
+                if (!hasPermission) continue;
+                sender.sendMessage("§b§l-> §b/perms " + c.getName());
+            }
+        } else {
+
+            // Match the first argument to a MasterCommand
+            String cmd = args[0];
+            MasterCommand c = null;
+            for (MasterCommand mc : getMasterCommandList()) {
+                if (mc.getName().equalsIgnoreCase(cmd)) {
+                    c = mc;
+                    break;
+                }
+            }
+
+            // Check if command exists
+            if (c != null) {
+
+                List<SubCommand> cmds = c.getCommands();
+
+                boolean hasAnyPermission = false;
+                for (SubCommand sc : cmds) {
+                    if (sc.getPermission() == null || sender.hasPermission(sc.getPermission())) {
+                        hasAnyPermission = true;
+                        break;
+                    }
+                }
+
+                if (!hasAnyPermission) {
+                    sender.sendMessage("§c§l[MP] §cYou don't have permission for that.");
+                    return true;
+                }
+
+                // If nothing else is specified, output the list of subcommands for the master command
+                if (args.length == 1) {
+                    if (cmds.size() > 0) {
+                        sender.sendMessage("§a§l[MP]§a " + c.getName().toUpperCase() + " Commands");
+                        for (SubCommand sc : cmds) {
+                            sender.sendMessage("§b§l-> §b/perms " + c.getName() + " " + sc.getName() + " " + (sc.getUsage() != null ? sc.getUsage() : ""));
+                        }
+                    } else {
+                        sender.sendMessage("§c§l[MP]§c No registered commands for provided scope.");
+                    }
+                } else {
+
+                    // Match the second argument to a subcommand
+                    SubCommand sc = null;
+                    for (SubCommand ssc : cmds) {
+                        if (ssc.getName().equalsIgnoreCase(args[1])) {
+                            sc = ssc;
+                            break;
+                        }
+                    }
+
+                    // Check if the command exists
+                    if (sc != null) {
+
+                        // Pass on any remaining arguments and execute the subcommand
+                        List<String> a = new ArrayList<>();
+                        a.addAll(Arrays.asList(args).subList(2, args.length));
+
+                        sc.run(sender, a);
+
+                    } else {
+                        sender.sendMessage("§c§l[MP] §cUnrecognized command. Try \"/perms " + c.getName() + "\"?");
+                    }
+
+                }
+
+
+            } else {
+                sender.sendMessage("§c§l[MP]§c Unrecognized scope. Try \"/perms\"?");
+            }
+
+        }
+
+
+        return true;
     }
 }
