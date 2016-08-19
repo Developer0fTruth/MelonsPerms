@@ -8,12 +8,14 @@ package com.turqmelon.MelonPerms.commands.usercommands;
 import com.turqmelon.MelonPerms.MelonPerms;
 import com.turqmelon.MelonPerms.commands.MasterCommand;
 import com.turqmelon.MelonPerms.commands.SubCommand;
+import com.turqmelon.MelonPerms.events.UserMembershipManipulationEvent;
 import com.turqmelon.MelonPerms.exceptions.*;
 import com.turqmelon.MelonPerms.groups.Group;
 import com.turqmelon.MelonPerms.groups.GroupManager;
 import com.turqmelon.MelonPerms.users.User;
 import com.turqmelon.MelonPerms.users.UserManager;
 import com.turqmelon.MelonPerms.util.Track;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 
 import java.util.List;
@@ -72,6 +74,27 @@ public class UserDemote extends SubCommand {
 
                         // Get the group before this one in the track and remove the current group
                         Group previous = track.getPrevious(toChange);
+
+                        UserMembershipManipulationEvent evt = new UserMembershipManipulationEvent(user, previous, UserMembershipManipulationEvent.GroupAction.ADD);
+                        Bukkit.getPluginManager().callEvent(evt);
+
+                        if (evt.isCancelled()) {
+                            sender.sendMessage("§c§l[MP] §cGroup manipulation prevented by 3rd party plugin.");
+                            return;
+                        }
+
+                        previous = evt.getGroup();
+
+                        evt = new UserMembershipManipulationEvent(user, toChange, UserMembershipManipulationEvent.GroupAction.REMOVE);
+                        Bukkit.getPluginManager().callEvent(evt);
+
+                        if (evt.isCancelled()) {
+                            sender.sendMessage("§c§l[MP] §cGroup manipulation prevented by 3rd party plugin.");
+                            return;
+                        }
+
+                        toChange = evt.getGroup();
+
                         user.getGroups().remove(toChange);
 
                         // If the one before it isn't default, add them to it

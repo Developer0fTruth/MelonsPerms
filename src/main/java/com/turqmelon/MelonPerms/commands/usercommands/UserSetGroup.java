@@ -9,6 +9,7 @@ package com.turqmelon.MelonPerms.commands.usercommands;
 import com.turqmelon.MelonPerms.MelonPerms;
 import com.turqmelon.MelonPerms.commands.MasterCommand;
 import com.turqmelon.MelonPerms.commands.SubCommand;
+import com.turqmelon.MelonPerms.events.UserMembershipManipulationEvent;
 import com.turqmelon.MelonPerms.exceptions.GroupNotFoundException;
 import com.turqmelon.MelonPerms.exceptions.InsufficientArgumentException;
 import com.turqmelon.MelonPerms.exceptions.InsufficientArgumentTypeException;
@@ -17,6 +18,7 @@ import com.turqmelon.MelonPerms.groups.Group;
 import com.turqmelon.MelonPerms.groups.GroupManager;
 import com.turqmelon.MelonPerms.users.User;
 import com.turqmelon.MelonPerms.users.UserManager;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 
 import java.util.List;
@@ -41,6 +43,16 @@ public class UserSetGroup extends SubCommand {
 
                 // Ensures the group exists
                 if (group != null) {
+
+                    UserMembershipManipulationEvent evt = new UserMembershipManipulationEvent(user, group, UserMembershipManipulationEvent.GroupAction.SET);
+                    Bukkit.getPluginManager().callEvent(evt);
+
+                    if (evt.isCancelled()) {
+                        sender.sendMessage("§c§l[MP] §cGroup manipulation prevented by 3rd party plugin.");
+                        return;
+                    }
+
+                    group = evt.getGroup();
 
                     // Informs the user that users are ALWAYS in the default group
                     if (group.isDefault()) {
