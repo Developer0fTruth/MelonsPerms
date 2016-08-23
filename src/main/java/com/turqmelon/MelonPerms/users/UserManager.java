@@ -25,7 +25,7 @@ public class UserManager {
     // Matches an online user to UUID
     // If none is found, searches DataStore
     public static User getUser(UUID uuid) {
-        for (User user : getUsers()) {
+        for (User user : new ArrayList<>(getUsers())) {
             if (user.getUuid().equals(uuid)) {
                 return user;
             }
@@ -36,7 +36,7 @@ public class UserManager {
     // Matches an online user by name
     // If none is found, searches DataStore
     public static User getUser(String name) {
-        for (User user : getUsers()) {
+        for (User user : new ArrayList<>(getUsers())) {
             if (user.getName() != null && user.getName().equalsIgnoreCase(name)) {
                 return user;
             }

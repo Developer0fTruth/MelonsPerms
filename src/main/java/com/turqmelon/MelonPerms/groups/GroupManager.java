@@ -21,7 +21,7 @@ public class GroupManager {
     // Returns the default group, defined by the group with the lowest priority
     public static Group getDefaultGroup() {
         Group group = null;
-        for (Group g : getGroups()) {
+        for (Group g : new ArrayList<>(getGroups())) {
             if (group == null || group.getPriority() > g.getPriority()) {
                 group = g;
             }
@@ -32,7 +32,7 @@ public class GroupManager {
     // If world is nu
     public static List<Group> getGroups(World world) {
         List<Group> groups = new ArrayList<>();
-        for (Group group : getGroups()) {
+        for (Group group : new ArrayList<>(getGroups())) {
             if (group.isSupportingWorld(world)) {
                 groups.add(group);
             }
@@ -43,7 +43,7 @@ public class GroupManager {
     // Returns a track that matches the provided name
     public static Track getTrack(String name) {
         name = name.replace("_", " ");
-        for (Track track : getTracks()) {
+        for (Track track : new ArrayList<>(getTracks())) {
             if (track.getName().equalsIgnoreCase(name)) {
                 return track;
             }
@@ -54,7 +54,7 @@ public class GroupManager {
     // Returns a group that matches the provided name
     public static Group getGroup(String name) {
         name = name.replace("_", " ");
-        for (Group group : getGroups()) {
+        for (Group group : new ArrayList<>(getGroups())) {
             if (group.getName().equalsIgnoreCase(name)) {
                 return group;
             }
