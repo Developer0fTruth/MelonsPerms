@@ -157,7 +157,9 @@ public abstract class SQLDataStore extends DataStore {
                 for (Object gr : groups) {
                     Group group = GroupManager.getGroup((String) gr);
                     if (group != null) {
-                        user.getGroups().add(group);
+                        if (!user.getGroups().contains(group)) {
+                            user.getGroups().add(group);
+                        }
                     }
                 }
 
