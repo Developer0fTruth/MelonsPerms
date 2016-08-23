@@ -29,7 +29,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.Set;
 import java.util.UUID;
@@ -45,6 +44,22 @@ public class MelonPerms extends JavaPlugin {
 
     // The selected data store
     private static DataStore dataStore = null;
+
+    public static void doAsync(Runnable runnable) {
+        getInstance().getServer().getScheduler().runTaskAsynchronously(getInstance(), runnable);
+    }
+
+    public static DataStore getDataStore() {
+        return dataStore;
+    }
+
+    public static MelonServer getLocalServer() {
+        return localServer;
+    }
+
+    public static MelonPerms getInstance() {
+        return instance;
+    }
 
     @Override
     public void onDisable() {
@@ -205,8 +220,12 @@ public class MelonPerms extends JavaPlugin {
                     @Override
                     public void run() {
                         if (user != null) {
-                            user.setAttachment(player.addAttachment(getInstance()));
-                            user.refreshPermissions(player.getWorld());
+                            try {
+                                user.setAttachment(player.addAttachment(getInstance()));
+                                user.refreshPermissions(player.getWorld());
+                            } catch (NullPointerException ex) {
+                                player.kickPlayer("§c§l[MP] Something strange happened. Try again?");
+                            }
                         } else {
                             player.kickPlayer("§c§l[MP] §cNo user data. Contact an admin.");
                         }
@@ -220,21 +239,5 @@ public class MelonPerms extends JavaPlugin {
     private void syncConfig(ConfigurationSection from, ConfigurationSection to) {
         Set<String> toKeys = to.getKeys(true);
         from.getKeys(true).stream().filter(key -> !toKeys.contains(key)).forEach(key -> to.set(key, from.get(key)));
-    }
-
-    public static void doAsync(Runnable runnable) {
-        getInstance().getServer().getScheduler().runTaskAsynchronously(getInstance(), runnable);
-    }
-
-    public static DataStore getDataStore() {
-        return dataStore;
-    }
-
-    public static MelonServer getLocalServer() {
-        return localServer;
-    }
-
-    public static MelonPerms getInstance() {
-        return instance;
     }
 }

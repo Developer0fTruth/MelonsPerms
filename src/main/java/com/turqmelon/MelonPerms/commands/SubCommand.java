@@ -72,7 +72,11 @@ public abstract class SubCommand {
                         for (Player player : Bukkit.getOnlinePlayers()) {
                             User user = UserManager.getUser(player);
                             if (user != null && user.getAttachment() != null) {
-                                user.refreshPermissions(player.getWorld());
+                                try {
+                                    user.refreshPermissions(player.getWorld());
+                                } catch (NullPointerException ex) {
+                                    player.kickPlayer("§c§l[MP] Something strange happened. Try again?");
+                                }
                             }
                         }
                     }

@@ -70,7 +70,11 @@ public class JoinListener implements Listener {
         user.setAttachment(player.addAttachment(MelonPerms.getInstance()));
 
         // We don't have a world yet, we'll refresh again when a player has fully logged in
+        try {
         user.refreshPermissions(null);
+        } catch (NullPointerException ex) {
+            event.disallow(PlayerLoginEvent.Result.KICK_OTHER, "§c§l[MP] Something strange happened. Try again?");
+        }
     }
 
     @EventHandler
@@ -106,7 +110,11 @@ public class JoinListener implements Listener {
         // Rebuild user permissions with their current world
         User user = UserManager.getUser(player);
         if (user != null) {
-            user.refreshPermissions(player.getWorld());
+            try {
+                user.refreshPermissions(player.getWorld());
+            } catch (NullPointerException ex) {
+                player.kickPlayer("§c§l[MP] Something strange happened. Try again?");
+            }
         }
 
     }

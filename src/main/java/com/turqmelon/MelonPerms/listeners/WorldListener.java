@@ -22,7 +22,11 @@ public class WorldListener implements Listener {
         Player player = event.getPlayer();
         User user = getUser(player);
         if (user != null) {
-            user.refreshPermissions(player.getWorld());
+            try {
+                user.refreshPermissions(player.getWorld());
+            } catch (NullPointerException ex) {
+                player.kickPlayer("§c§l[MP] Something strange happened. Try again?");
+            }
         }
     }
 
