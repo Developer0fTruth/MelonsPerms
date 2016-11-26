@@ -234,6 +234,9 @@ public class MelonPerms extends JavaPlugin {
             }
         });
 
+        // Cleans up ghosted user entries if the associated player is offline and it's been more than 1 minute from download
+        getServer().getScheduler().runTaskTimerAsynchronously(this, UserManager::cleanupCached, 1200L, 1200L);
+
     }
 
     private void syncConfig(ConfigurationSection from, ConfigurationSection to) {

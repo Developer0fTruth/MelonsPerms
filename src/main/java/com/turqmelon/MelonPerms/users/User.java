@@ -45,14 +45,19 @@ public class User {
     // Bukkit's permission attachment
     private PermissionAttachment attachment = null;
 
+    // The timestamp of when this user was downloaded
+    private long downloadTime;
+
     public User(UUID uuid) {
         this.uuid = uuid;
         this.name = null;
+        this.downloadTime = System.currentTimeMillis();
     }
 
     public User(UUID uuid, String name) {
         this.uuid = uuid;
         this.name = name;
+        this.downloadTime = System.currentTimeMillis();
     }
 
     // Returns the user's prefix, respecting group priority
@@ -125,20 +130,20 @@ public class User {
         this.attachment = attachment;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setSuperUser(boolean superUser) {
-        this.superUser = superUser;
-    }
-
     public UUID getUuid() {
         return uuid;
     }
 
     public String getName() {
         return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public long getDownloadTime() {
+        return downloadTime;
     }
 
     // Matches a permission node to a user-defiend privilege
@@ -226,5 +231,9 @@ public class User {
 
     public boolean isSuperUser() {
         return superUser;
+    }
+
+    public void setSuperUser(boolean superUser) {
+        this.superUser = superUser;
     }
 }

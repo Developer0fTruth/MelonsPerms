@@ -7,16 +7,30 @@ package com.turqmelon.MelonPerms.users;
 
 
 import com.turqmelon.MelonPerms.MelonPerms;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 public class UserManager {
 
     // A list of all currently online users
     private static List<User> users = new ArrayList<>();
+
+    // Removes ghosted users
+    public static void cleanupCached() {
+        Iterator<User> it = users.iterator();
+        while (it.hasNext()) {
+            User user = it.next();
+            if (System.currentTimeMillis() - user.getDownloadTime() > TimeUnit.MINUTES.toMillis(1) && Bukkit.getPlayer(user.getUuid()) == null) {
+                it.remove();
+            }
+        }
+    }
 
     public static User getUser(Player player) {
         return getUser(player.getName());
