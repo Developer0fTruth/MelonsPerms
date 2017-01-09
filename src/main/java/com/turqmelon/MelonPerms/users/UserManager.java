@@ -26,7 +26,7 @@ public class UserManager {
         Iterator<User> it = users.iterator();
         while (it.hasNext()) {
             User user = it.next();
-            if (System.currentTimeMillis() - user.getDownloadTime() > TimeUnit.MINUTES.toMillis(1) && Bukkit.getPlayer(user.getUuid()) == null) {
+            if (System.currentTimeMillis() - user.getDownloadTime() > TimeUnit.MINUTES.toMillis(1) && (Bukkit.getPlayer(user.getUuid()) == null || !Bukkit.getPlayer(user.getUuid()).isOnline())) {
                 it.remove();
             }
         }
